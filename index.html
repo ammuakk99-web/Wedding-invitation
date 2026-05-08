@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Amrutha & Akshay - Wedding Invitation</title>
-<meta property="og:title" content="Amrutha & Akshay's Wedding · #AKSHTHA">
+<title>Amrutha &amp; Akshay - Wedding Invitation</title>
+<meta property="og:title" content="Amrutha & Akshay's Wedding">
 <meta property="og:description" content="Join us in celebrating our special day · 12 July 2026">
 <meta property="og:type" content="website">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Dancing+Script:wght@400;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
@@ -12,6 +12,9 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   
   :root {
+    --olive: #8a9474;
+    --olive-dark: #6b7553;
+    --olive-darker: #4f5b3d;
     --sage: #8a9a7b;
     --sage-dark: #5d6d4e;
     --sage-light: #c5d1b8;
@@ -21,27 +24,245 @@
     --blush-pale: #f9eded;
     --cream: #faf7f2;
     --gold: #b8956a;
+    --seal-bg: #d8d2c0;
     --text: #4a4a3f;
     --text-light: #6b6b5e;
   }
   
-  body {
-    font-family: 'Lora', serif;
-    background: var(--cream);
-    color: var(--text);
-    line-height: 1.7;
-    overflow-x: hidden;
-  }
+  body { font-family: 'Lora', serif; background: var(--cream); color: var(--text); line-height: 1.7; overflow-x: hidden; }
+  body.seal-closed { overflow: hidden; height: 100vh; }
+  
+  section { padding: 4rem 1.5rem; max-width: 800px; margin: 0 auto; }
+  section.full-bleed { max-width: 100%; padding: 0; }
+  section.full-bleed > .inner { max-width: 800px; margin: 0 auto; padding: 4rem 1.5rem; }
+  
+  .section-title { font-family: 'Dancing Script', cursive; font-size: 2.8rem; color: var(--sage-dark); text-align: center; margin-bottom: 0.5rem; font-weight: 600; }
+  .section-subtitle { font-family: 'Cormorant Garamond', serif; text-align: center; color: var(--text-light); letter-spacing: 3px; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 2rem; }
   
   .divider { display: flex; align-items: center; justify-content: center; margin: 2rem 0; gap: 1rem; }
   .divider::before, .divider::after { content: ''; flex: 1; max-width: 80px; height: 1px; background: var(--sage); }
-  .divider-icon { color: var(--sage-dark); font-size: 1.2rem; }
+  .divider-icon { color: var(--gold); font-size: 1.2rem; }
   
+  /* SEALED ENVELOPE - PAGE 1 (letter card with opening animation) */
+  .seal-page {
+    position: fixed; inset: 0; z-index: 9999;
+    background: 
+      radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 80%, rgba(0,0,0,0.15) 0%, transparent 50%),
+      var(--olive-dark); 
+    overflow: hidden;
+    transition: opacity 0.6s ease 1.4s, visibility 0s linear 2s;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem 1.5rem;
+    perspective: 1500px;
+  }
+  body.seal-opened .seal-page { opacity: 0; visibility: hidden; pointer-events: none; }
+  
+  /* The letter card container - full screen */
+  .letter-card {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    transform-style: preserve-3d;
+    transition: transform 1.6s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  
+  /* Card body — the front of the closed letter (clickable everywhere) */
+  .letter-body {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--olive) 0%, var(--olive-dark) 100%);
+    border-radius: 0;
+    box-shadow: 
+      0 0 0 1px rgba(245,233,208,0.15),
+      inset 0 0 100px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  
+  /* Subtle texture on the card */
+  .letter-body::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: 
+      repeating-linear-gradient(45deg, transparent 0px, rgba(255,255,255,0.02) 1px, transparent 2px),
+      repeating-linear-gradient(-45deg, transparent 0px, rgba(0,0,0,0.025) 1px, transparent 2px);
+    pointer-events: none; mix-blend-mode: overlay;
+  }
+  
+  /* Decorative inner border */
+  .letter-body::after {
+    content: '';
+    position: absolute;
+    top: 30px; left: 30px; right: 30px; bottom: 30px;
+    border: 1px solid rgba(245,233,208,0.3);
+    border-radius: 4px;
+    pointer-events: none;
+  }
+  
+  /* Second inner border for elegance */
+  .letter-content::before {
+    content: '';
+    position: absolute;
+    top: -30px; left: -30px; right: -30px; bottom: -30px;
+    border: 1px solid rgba(245,233,208,0.12);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+  
+  /* The flap that opens upward when tapped (full screen sized) */
+  .letter-flap {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50vh;
+    background: linear-gradient(180deg, var(--olive) 0%, var(--olive-dark) 100%);
+    transform-origin: top center;
+    transition: transform 1.4s cubic-bezier(0.55, 0, 0.45, 1);
+    z-index: 3;
+    box-shadow: inset 0 -10px 40px rgba(0,0,0,0.3);
+    border-radius: 0;
+    backface-visibility: hidden;
+  }
+  .letter-flap::before {
+    content: '';
+    position: absolute; inset: 0;
+    clip-path: polygon(0 0, 100% 0, 100% 50%, 50% 100%, 0 50%);
+    background: linear-gradient(180deg, var(--olive) 0%, var(--olive-darker) 100%);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+  }
+  /* Triangle fold lines on the flap */
+  .letter-flap::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(135deg, transparent 49.7%, rgba(0,0,0,0.3) 49.85%, rgba(0,0,0,0.3) 50.15%, transparent 50.3%),
+      linear-gradient(45deg, transparent 49.7%, rgba(0,0,0,0.3) 49.85%, rgba(0,0,0,0.3) 50.15%, transparent 50.3%);
+    pointer-events: none;
+    clip-path: polygon(0 0, 100% 0, 100% 50%, 50% 100%, 0 50%);
+  }
+  
+  /* When card opens, flap rotates up and away */
+  body.seal-opened .letter-flap {
+    transform: rotateX(-180deg);
+  }
+  
+  /* The whole card slides up and fades out after flap opens */
+  body.seal-opened .letter-card {
+    transform: translateY(-100vh) scale(0.85);
+    transition: transform 1s ease-in 0.8s;
+  }
+  
+  /* Letter content (visible behind the flap when closed, fully visible when open) */
+  .letter-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .letter-tap-text {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.6rem, 4.5vw, 2.2rem);
+    color: rgba(245,233,208,0.95);
+    margin-top: 2.5rem;
+    margin-bottom: 0;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    font-weight: 600;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+  
+  /* Botanical decorations on the letter */
+  .letter-botanical {
+    position: absolute;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.4;
+  }
+  .letter-botanical svg path,
+  .letter-botanical svg circle,
+  .letter-botanical svg ellipse {
+    stroke: rgba(245, 233, 208, 0.55);
+    stroke-width: 1.2;
+    fill: none;
+    stroke-linecap: round;
+  }
+  .letter-bot-tl { top: 60px; left: 60px; width: 75px; transform: rotate(-15deg); }
+  .letter-bot-tr { top: 60px; right: 60px; width: 75px; transform: rotate(20deg); }
+  .letter-bot-bl { bottom: 60px; left: 60px; width: 80px; transform: rotate(180deg); }
+  .letter-bot-br { bottom: 60px; right: 60px; width: 80px; transform: rotate(-180deg); }
+  
+  /* The AA seal/circle - in the center of the card */
+  .seal-circle {
+    width: clamp(180px, 45vw, 260px); height: clamp(180px, 45vw, 260px);
+    margin: 0 auto; border-radius: 50%; background: var(--seal-bg);
+    box-shadow: 
+      0 6px 18px rgba(0,0,0,0.5), 
+      inset 0 -8px 20px rgba(0,0,0,0.18), 
+      inset 0 4px 10px rgba(255,255,255,0.35);
+    position: relative; cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex; align-items: center; justify-content: center;
+    border: none; padding: 0; overflow: hidden;
+    z-index: 2;
+  }
+  .seal-circle::before {
+    content: ''; position: absolute; inset: 6px;
+    border-radius: 50%; border: 1.5px solid rgba(80,90,60,0.25); pointer-events: none;
+  }
+  .seal-circle:hover, .seal-circle:focus {
+    transform: scale(1.05);
+    box-shadow: 
+      0 10px 28px rgba(0,0,0,0.6), 
+      inset 0 -8px 20px rgba(0,0,0,0.18), 
+      inset 0 4px 10px rgba(255,255,255,0.45);
+    outline: none;
+  }
+  .seal-circle:active { transform: scale(0.97); }
+  body.seal-opened .seal-circle { pointer-events: none; }
+  
+  .seal-monogram { width: 70%; height: 70%; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
+  .seal-monogram-fallback {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: clamp(5rem, 14vw, 7rem); color: var(--olive-darker);
+    font-weight: 400; line-height: 1; letter-spacing: -0.05em;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .letter-couple-names {
+    margin-top: 1.5rem; font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.4rem, 4vw, 1.7rem); color: rgba(245,233,208,0.95);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.4); font-weight: 600; line-height: 1.3;
+  }
+  .letter-date {
+    margin-top: 0.6rem; font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem; color: rgba(245,233,208,0.7);
+    letter-spacing: 5px; font-weight: 500;
+  }
+  .seal-pulse {
+    position: absolute; inset: 0; border-radius: 50%;
+    border: 2px solid rgba(245,233,208,0.5); pointer-events: none;
+    animation: sealpulse 2.2s ease-out infinite;
+  }
+  @keyframes sealpulse {
+    0% { transform: scale(1); opacity: 0.7; }
+    100% { transform: scale(1.4); opacity: 0; }
+  }
+  body.seal-opened .seal-pulse { display: none; }
+  
+  /* HERO - PAGE 2 */
   .hero {
     min-height: 100vh;
     background: linear-gradient(135deg, var(--sage-pale) 0%, var(--blush-pale) 100%);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     text-align: center; padding: 3rem 1.5rem; position: relative; overflow: hidden;
+    max-width: 100%;
   }
   .hero::before {
     content: ''; position: absolute; top: 20px; left: 20px; right: 20px; bottom: 20px;
@@ -51,13 +272,11 @@
   .hero-leaf.tl { top: 5%; left: 5%; transform: rotate(-30deg); }
   .hero-leaf.br { bottom: 5%; right: 5%; transform: rotate(150deg); }
   
-  .hero-ganesha { font-size: 2rem; color: var(--gold); margin-bottom: 1rem; }
-  .hero-sanskrit { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--sage-dark); font-size: 1.1rem; margin-bottom: 2rem; letter-spacing: 1px; }
+  .hero-ganesha { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--gold); margin-bottom: 0.8rem; letter-spacing: 2px; font-style: italic; }
   .hero-together { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--text-light); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 1.5rem; }
-  .hero-names { font-family: 'Dancing Script', cursive; font-size: clamp(3rem, 10vw, 5.5rem); color: var(--sage-dark); line-height: 1.1; margin-bottom: 0.5rem; font-weight: 600; }
-  .hero-amp { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(2rem, 6vw, 3rem); color: var(--gold); display: block; margin: 0.3rem 0; font-weight: 300; }
+  .hero-names { font-family: 'Dancing Script', cursive; font-size: clamp(2.5rem, 8vw, 4.5rem); color: var(--sage-dark); line-height: 1.2; margin-bottom: 0.5rem; font-weight: 600; }
+  .hero-and { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(1.5rem, 4vw, 2rem); color: var(--gold); display: block; margin: 0.5rem 0; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; }
   .hero-tagline { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--text-light); margin-top: 2rem; font-style: italic; }
-  .hero-hashtag { font-family: 'Dancing Script', cursive; font-size: 1.5rem; color: var(--gold); margin-top: 1rem; letter-spacing: 2px; }
   .hero-date { margin-top: 2rem; padding: 1rem 2rem; border-top: 1px solid var(--sage); border-bottom: 1px solid var(--sage); display: inline-block; }
   .hero-date-day, .hero-date-month { font-family: 'Cormorant Garamond', serif; font-size: 1rem; letter-spacing: 4px; color: var(--text-light); text-transform: uppercase; }
   .hero-date-num { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; color: var(--sage-dark); font-weight: 500; line-height: 1; margin: 0.3rem 0; }
@@ -65,269 +284,91 @@
   .scroll-hint { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); color: var(--sage-dark); font-size: 0.85rem; letter-spacing: 2px; animation: bounce 2s infinite; text-transform: uppercase; font-family: 'Cormorant Garamond', serif; }
   @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-10px); } }
   
-  /* Full-page artistic A & A monogram section */
-  /* Full-page photo section - matches other section widths */
-.photo-section {
-  position: relative;
-  width: 100%;
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 1.5rem;
-  overflow: hidden;
-}
-
-.photo-section img,
-.photo-full {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(138, 154, 123, 0.2);
-  border: 4px solid white;
-}
-
-.photo-overlay {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 1.5rem;
-  right: 1.5rem;
-  padding: 2rem 1.5rem 1.5rem;
-  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
-  text-align: center;
-  color: white;
-  border-radius: 0 0 8px 8px;
-}
-
-.photo-overlay-text {
-  font-family: 'Dancing Script', cursive;
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 600;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.4);
-  margin-bottom: 0.3rem;
-}
-
-.photo-overlay-hashtag {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.1rem;
-  letter-spacing: 4px;
-  color: #f5d4a8;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
-}
-  .monogram-bg {
+  /* Hero content fades in after seal opens */
+  .hero-content-animate {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 1.2s ease 0.6s, transform 1.2s ease 0.6s;
+  }
+  body.seal-opened .hero-content-animate { opacity: 1; transform: translateY(0); }
+  
+  /* AA circle on page 2 (hero) */
+  .hero-aa-circle {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    margin: 0 auto 1.8rem;
+    background: linear-gradient(135deg, var(--cream), var(--sage-pale));
+    box-shadow: 
+      0 6px 20px rgba(93, 109, 78, 0.25),
+      inset 0 -4px 12px rgba(0,0,0,0.08),
+      inset 0 3px 8px rgba(255,255,255,0.5);
     position: relative;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(ellipse at center, var(--cream) 0%, var(--sage-pale) 60%, var(--blush-pale) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    border: 3px solid white;
   }
-  .monogram-bg::before {
+  .hero-aa-circle::before {
     content: '';
     position: absolute;
-    top: 30px; left: 30px; right: 30px; bottom: 30px;
-    border: 1px solid var(--sage);
-    border-radius: 6px;
-    pointer-events: none;
-  }
-  .monogram-bg::after {
-    content: '';
-    position: absolute;
-    top: 38px; left: 38px; right: 38px; bottom: 38px;
+    inset: 4px;
+    border-radius: 50%;
     border: 1px solid var(--gold);
     opacity: 0.4;
-    border-radius: 4px;
     pointer-events: none;
   }
-  .monogram-leaf {
-    position: absolute;
-    font-size: 6rem;
-    color: var(--sage-dark);
-    opacity: 0.18;
-    pointer-events: none;
+  .hero-aa-circle img {
+    width: 75%;
+    height: 75%;
+    object-fit: contain;
   }
-  .monogram-leaf-tl { top: 60px; left: 60px; transform: rotate(-30deg); }
-  .monogram-leaf-tr { top: 60px; right: 60px; transform: rotate(30deg); }
-  .monogram-leaf-bl { bottom: 60px; left: 60px; transform: rotate(-150deg); }
-  .monogram-leaf-br { bottom: 60px; right: 60px; transform: rotate(150deg); }
-  .monogram-content {
-    position: relative;
-    text-align: center;
-    padding: 2rem;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 2s ease-out, transform 2s ease-out;
-    z-index: 2;
-  }
-  .monogram-content.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .monogram-frame { padding: 1rem 2rem; }
-  .monogram-divider-top, .monogram-divider-bot {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    margin: 1rem 0;
-  }
-  .monogram-line {
-    flex: 0 0 60px;
-    height: 1px;
-    background: var(--gold);
-    opacity: 0.6;
-  }
-  .monogram-ornament { color: var(--gold); font-size: 1.2rem; }
-  .monogram-letters {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: clamp(1rem, 4vw, 2.5rem);
-    margin: 1.5rem 0 1rem;
-  }
-  .monogram-letter {
-    font-family: 'Dancing Script', cursive;
-    font-size: clamp(7rem, 20vw, 14rem);
-    color: var(--sage-dark);
-    font-weight: 700;
-    line-height: 1;
-    text-shadow: 2px 2px 0 var(--blush-pale), 4px 4px 12px rgba(93, 109, 78, 0.15);
-    letter-spacing: -0.05em;
-  }
-  .monogram-amp {
+  .hero-aa-fallback {
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
-    font-size: clamp(3.5rem, 10vw, 7rem);
-    color: var(--gold);
-    font-weight: 300;
-    line-height: 1;
-    text-shadow: 1px 1px 4px rgba(184, 149, 106, 0.2);
-  }
-  .monogram-names {
-    font-family: 'Dancing Script', cursive;
-    font-size: clamp(1.8rem, 4.5vw, 2.5rem);
+    font-size: 3rem;
     color: var(--sage-dark);
-    font-weight: 600;
-    margin: 1rem 0 0.3rem;
-  }
-  .monogram-hashtag {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1rem, 2.5vw, 1.3rem);
-    color: var(--gold);
-    letter-spacing: 6px;
-    margin-bottom: 1rem;
-    font-weight: 500;
-  }
-  .monogram-date {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.1rem;
-    color: var(--text-light);
-    letter-spacing: 8px;
-    font-weight: 500;
-    margin-top: 0.5rem;
+    line-height: 1;
+    letter-spacing: -0.05em;
   }
   
-  section { padding: 4rem 1.5rem; max-width: 800px; margin: 0 auto; }
-  .section-title { font-family: 'Dancing Script', cursive; font-size: 2.8rem; color: var(--sage-dark); text-align: center; margin-bottom: 0.5rem; font-weight: 600; }
-  .section-subtitle { font-family: 'Cormorant Garamond', serif; text-align: center; color: var(--text-light); letter-spacing: 3px; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 2rem; }
+  /* MONOGRAM SECTION */
+  .monogram-section { width: 100%; max-width: 100%; height: 100vh; min-height: 600px; padding: 0; margin: 0; overflow: hidden; position: relative; }
+  .monogram-bg { position: relative; width: 100%; height: 100%; background: radial-gradient(ellipse at center, var(--cream) 0%, var(--sage-pale) 60%, var(--blush-pale) 100%); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .monogram-bg::before { content: ''; position: absolute; top: 30px; left: 30px; right: 30px; bottom: 30px; border: 1px solid var(--sage); border-radius: 6px; pointer-events: none; }
+  .monogram-bg::after { content: ''; position: absolute; top: 38px; left: 38px; right: 38px; bottom: 38px; border: 1px solid var(--gold); opacity: 0.4; border-radius: 4px; pointer-events: none; }
+  .monogram-leaf { position: absolute; font-size: 5rem; color: var(--gold); opacity: 0.25; pointer-events: none; }
+  .monogram-leaf-tl { top: 60px; left: 60px; }
+  .monogram-leaf-tr { top: 60px; right: 60px; }
+  .monogram-leaf-bl { bottom: 60px; left: 60px; }
+  .monogram-leaf-br { bottom: 60px; right: 60px; }
+  .monogram-content { position: relative; text-align: center; padding: 2rem; opacity: 0; transform: translateY(20px); transition: opacity 2s ease-out, transform 2s ease-out; z-index: 2; }
+  .monogram-content.visible { opacity: 1; transform: translateY(0); }
+  .monogram-divider-top, .monogram-divider-bot { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 1rem 0; }
+  .monogram-line { flex: 0 0 60px; height: 1px; background: var(--gold); opacity: 0.6; }
+  .monogram-ornament { color: var(--gold); font-size: 1.2rem; }
+  .monogram-letters { display: flex; align-items: center; justify-content: center; gap: clamp(1rem, 4vw, 2.5rem); margin: 1.5rem 0 1rem; }
+  .monogram-letter { font-family: 'Dancing Script', cursive; font-size: clamp(7rem, 20vw, 14rem); color: var(--sage-dark); font-weight: 700; line-height: 1; text-shadow: 2px 2px 0 var(--blush-pale), 4px 4px 12px rgba(93,109,78,0.15); letter-spacing: -0.05em; }
+  .monogram-amp { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(3.5rem, 10vw, 7rem); color: var(--gold); font-weight: 300; line-height: 1; }
+  .monogram-names { font-family: 'Dancing Script', cursive; font-size: clamp(1.8rem, 4.5vw, 2.5rem); color: var(--sage-dark); font-weight: 600; margin: 1rem 0 0.3rem; }
+  .monogram-hashtag { font-family: 'Cormorant Garamond', serif; font-size: clamp(1rem, 2.5vw, 1.3rem); color: var(--gold); letter-spacing: 6px; margin-bottom: 1rem; font-weight: 500; }
+  .monogram-date { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--text-light); letter-spacing: 8px; font-weight: 500; margin-top: 0.5rem; }
   
-  /* Couple photo (single combined) */
-  .couple-photo-wrap { text-align: center; margin: 2rem 0; }
-  .couple-photo { 
-    max-width: 100%; 
-    width: 380px; 
-    height: 380px; 
-    border-radius: 50%; 
-    object-fit: cover; 
-    border: 4px solid var(--sage-light); 
-    box-shadow: 0 8px 30px rgba(138, 154, 123, 0.25);
-    background: linear-gradient(135deg, var(--sage-pale), var(--blush-pale));
-  }
-  
-  /* Hosts (parents inviting) card */
-  .hosts-card { 
-    text-align: center; 
-    padding: 1.8rem 1.5rem; 
-    margin: 1.5rem 0; 
-    background: white; 
-    border-radius: 12px; 
-    border: 1px solid var(--sage-light);
-    box-shadow: 0 2px 12px rgba(138, 154, 123, 0.08);
-  }
-  .hosts-names { 
-    font-family: 'Cormorant Garamond', serif; 
-    font-size: 1.4rem; 
-    color: var(--sage-dark); 
-    font-weight: 600; 
-    margin-bottom: 0.6rem; 
-    line-height: 1.4;
-  }
-  .hosts-address { 
-    font-family: 'Cormorant Garamond', serif; 
-    font-style: italic; 
-    color: var(--text-light); 
-    font-size: 0.98rem; 
-    line-height: 1.7;
-  }
-  .hosts-phone { 
-    display: inline-block; 
-    margin-top: 0.4rem; 
-    color: var(--gold); 
-    font-style: normal; 
-    font-size: 0.9rem; 
-    letter-spacing: 0.5px;
-  }
-  
-  /* Formal invite line */
-  .invite-line { 
-    text-align: center; 
-    margin: 2rem 0 1.5rem; 
-    font-family: 'Cormorant Garamond', serif; 
-    font-style: italic; 
-    color: var(--text); 
-    font-size: 1.15rem; 
-    line-height: 1.8;
-  }
+  /* HOSTS / INVITE / COUPLE */
+  .hosts-card { text-align: center; padding: 1.8rem 1.5rem; margin: 1.5rem 0; background: white; border-radius: 12px; border: 1px solid var(--sage-light); box-shadow: 0 2px 12px rgba(138,154,123,0.08); }
+  .hosts-names { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--sage-dark); font-weight: 600; margin-bottom: 0.6rem; line-height: 1.4; }
+  .hosts-address { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text-light); font-size: 0.98rem; line-height: 1.7; }
+  .hosts-phone { display: inline-block; margin-top: 0.4rem; color: var(--gold); font-style: normal; font-size: 0.9rem; letter-spacing: 0.5px; }
+  .invite-line { text-align: center; margin: 2rem 0 1.5rem; font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text); font-size: 1.15rem; line-height: 1.8; }
   .invite-line p { max-width: 600px; margin: 0 auto; }
+  .couple-card { text-align: center; padding: 1.5rem; margin: 1rem auto; max-width: 500px; }
+  .couple-card-name { font-family: 'Dancing Script', cursive; font-size: 3rem; color: var(--sage-dark); font-weight: 600; line-height: 1.1; margin-bottom: 0.8rem; }
+  .couple-card-relation { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text-light); font-size: 1rem; line-height: 1.7; }
+  .with-text { text-align: center; font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--gold); font-size: 1.5rem; margin: 0.5rem 0; letter-spacing: 3px; }
   
-  /* Bride / Groom card */
-  .couple-card { 
-    text-align: center; 
-    padding: 1.5rem; 
-    margin: 1rem auto;
-    max-width: 500px;
-  }
-  .couple-card-name { 
-    font-family: 'Dancing Script', cursive; 
-    font-size: 3rem; 
-    color: var(--sage-dark); 
-    font-weight: 600; 
-    line-height: 1.1;
-    margin-bottom: 0.8rem;
-  }
-  .couple-card-relation { 
-    font-family: 'Cormorant Garamond', serif; 
-    font-style: italic; 
-    color: var(--text-light); 
-    font-size: 1rem; 
-    line-height: 1.7;
-  }
-  
-  /* "with" connector */
-  .with-text { 
-    text-align: center; 
-    font-family: 'Cormorant Garamond', serif; 
-    font-style: italic; 
-    color: var(--gold); 
-    font-size: 1.5rem; 
-    margin: 0.5rem 0; 
-    letter-spacing: 3px;
-  }
-  
-  .events-section { background: linear-gradient(180deg, var(--cream) 0%, var(--sage-pale) 100%); }
-  .event-card { background: white; border-radius: 8px; padding: 2rem; margin-bottom: 1.2rem; border-left: 4px solid var(--gold); box-shadow: 0 2px 12px rgba(138, 154, 123, 0.08); transition: transform 0.3s ease; }
-  .event-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(138, 154, 123, 0.15); }
+  /* EVENT CARD */
+  .event-card { background: white; border-radius: 8px; padding: 2rem; margin-bottom: 1.2rem; border-left: 4px solid var(--gold); box-shadow: 0 2px 12px rgba(138,154,123,0.08); transition: transform 0.3s ease; }
+  .event-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(138,154,123,0.15); }
   .event-title { font-family: 'Dancing Script', cursive; font-size: 2rem; color: var(--sage-dark); margin-bottom: 0.5rem; font-weight: 600; text-align: center; }
   .event-meta { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; font-size: 1rem; color: var(--text); align-items: center; text-align: center; }
   .event-meta-item { display: flex; align-items: center; gap: 0.5rem; font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; }
@@ -335,28 +376,28 @@
   .event-info-line { text-align: center; margin-top: 1rem; padding: 0.8rem 1rem; background: var(--cream); border-radius: 6px; font-family: 'Cormorant Garamond', serif; color: var(--text); font-size: 1rem; letter-spacing: 0.5px; border: 1px dashed var(--sage-light); }
   .event-note { background: var(--blush-pale); border-left: 3px solid var(--blush-dark); padding: 1rem 1.2rem; margin-top: 1rem; border-radius: 6px; font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text); font-size: 0.95rem; text-align: center; }
   
-  .datetime-section { background: var(--sage-pale); text-align: center; }
+  /* COUNTDOWN */
   .countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; max-width: 500px; margin: 2rem auto; }
-  .countdown-box { background: white; padding: 1rem 0.5rem; border-radius: 8px; box-shadow: 0 2px 12px rgba(138, 154, 123, 0.1); }
+  .countdown-box { background: white; padding: 1rem 0.5rem; border-radius: 8px; box-shadow: 0 2px 12px rgba(138,154,123,0.1); }
   .countdown-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--sage-dark); font-weight: 600; line-height: 1; }
   .countdown-label { font-family: 'Cormorant Garamond', serif; font-size: 0.75rem; color: var(--text-light); letter-spacing: 2px; text-transform: uppercase; margin-top: 0.4rem; }
   
+  /* BUTTONS */
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 0.9rem 1.8rem; background: var(--sage-dark); color: white; border: none; border-radius: 50px; font-family: 'Cormorant Garamond', serif; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease; text-decoration: none; font-weight: 500; }
-  .btn:hover { background: var(--sage); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(93, 109, 78, 0.3); }
+  .btn:hover { background: var(--sage); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(93,109,78,0.3); }
   .btn-outline { background: transparent; color: var(--sage-dark); border: 2px solid var(--sage-dark); }
   .btn-outline:hover { background: var(--sage-dark); color: white; }
   .btn-blush { background: var(--blush-dark); }
   .btn-blush:hover { background: var(--blush); color: var(--text); }
   .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
   
-  .rsvp-section { background: var(--blush-pale); text-align: center; }
-  .rsvp-form { max-width: 500px; margin: 2rem auto 0; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(200, 154, 154, 0.15); }
+  /* RSVP */
+  .rsvp-form { max-width: 500px; margin: 2rem auto 0; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(200,154,154,0.15); }
   .form-group { margin-bottom: 1.2rem; text-align: left; }
   .form-label { display: block; font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; color: var(--text); margin-bottom: 0.4rem; letter-spacing: 1px; }
   .form-input, .form-textarea, .form-select { width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--sage-light); border-radius: 6px; font-family: 'Lora', serif; font-size: 1rem; background: var(--cream); color: var(--text); transition: border-color 0.3s; }
   .form-input:focus, .form-textarea:focus, .form-select:focus { outline: none; border-color: var(--sage-dark); background: white; }
   .form-textarea { min-height: 100px; resize: vertical; }
-  
   .rsvp-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1.2rem; }
   .rsvp-radio { position: relative; cursor: pointer; }
   .rsvp-radio input { position: absolute; opacity: 0; }
@@ -364,95 +405,223 @@
   .rsvp-radio input:checked + .rsvp-radio-label { background: var(--sage-dark); color: white; border-color: var(--sage-dark); }
   .rsvp-radio input[value="no"]:checked + .rsvp-radio-label { background: var(--blush-dark); border-color: var(--blush-dark); }
   
-  .map-container { margin-top: 1.5rem; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(138, 154, 123, 0.15); border: 3px solid white; }
+  /* MAP */
+  .map-container { margin-top: 1.5rem; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(138,154,123,0.15); border: 3px solid white; }
   .map-container iframe { width: 100%; height: 350px; display: block; border: 0; }
-  .venue-info { background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; text-align: center; box-shadow: 0 2px 12px rgba(138, 154, 123, 0.08); }
+  .venue-info { background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; text-align: center; box-shadow: 0 2px 12px rgba(138,154,123,0.08); }
   .venue-name { font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: var(--sage-dark); margin-bottom: 0.3rem; }
   .venue-address { color: var(--text-light); font-size: 0.95rem; line-height: 1.6; }
   
-  .messages-section { background: linear-gradient(180deg, var(--cream) 0%, var(--sage-pale) 100%); }
-  .message-form { background: white; padding: 1.8rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 2px 12px rgba(138, 154, 123, 0.1); }
+  /* MESSAGES */
+  .message-form { background: white; padding: 1.8rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 2px 12px rgba(138,154,123,0.1); }
   .messages-list { margin-top: 2rem; }
-  .message-card { background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; border-left: 4px solid var(--blush-dark); box-shadow: 0 2px 10px rgba(200, 154, 154, 0.1); position: relative; }
+  .message-card { background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; border-left: 4px solid var(--blush-dark); box-shadow: 0 2px 10px rgba(200,154,154,0.1); position: relative; }
   .message-card::before { content: '"'; position: absolute; top: -10px; left: 15px; font-size: 4rem; color: var(--blush); font-family: 'Dancing Script', cursive; line-height: 1; }
   .message-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem; color: var(--text); line-height: 1.6; margin-bottom: 0.8rem; padding-left: 0.5rem; }
   .message-author { font-family: 'Dancing Script', cursive; font-size: 1.3rem; color: var(--sage-dark); text-align: right; }
   .no-messages { text-align: center; color: var(--text-light); font-style: italic; padding: 2rem; }
   
-  .footer { background: var(--sage-dark); color: var(--cream); text-align: center; padding: 3rem 1.5rem; }
+  /* FOOTER */
+  .footer { background: var(--sage-dark); color: var(--cream); text-align: center; padding: 4rem 1.5rem; max-width: 100%; }
   .footer-title { font-family: 'Dancing Script', cursive; font-size: 2.5rem; margin-bottom: 1rem; }
   .footer-hashtag { font-family: 'Dancing Script', cursive; font-size: 2rem; color: var(--gold); margin: 1rem 0; letter-spacing: 3px; }
-  .footer-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem; max-width: 500px; margin: 0 auto; opacity: 0.9; }
+  .footer-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem; max-width: 500px; margin: 0 auto; opacity: 0.9; line-height: 1.8; }
+  .footer-signoff { font-family: 'Dancing Script', cursive; font-size: 2rem; margin-top: 1.5rem; color: var(--blush); }
   
+  /* DOGS SECTION */
+  .dogs-section { background: var(--cream); text-align: center; padding: 3rem 1.5rem 4rem; max-width: 100%; }
+  .dogs-inner { max-width: 700px; margin: 0 auto; }
+  .dogs-intro { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text-light); font-size: 1.05rem; margin-bottom: 1.8rem; line-height: 1.7; }
+  .dogs-photo-wrap { 
+    margin: 1rem auto; 
+    max-width: 320px; 
+    background: white;
+    padding: 14px 14px 50px;
+    border-radius: 4px;
+    box-shadow: 0 8px 30px rgba(138,154,123,0.25), 0 2px 6px rgba(0,0,0,0.1);
+    transform: rotate(-2deg);
+    position: relative;
+    transition: transform 0.4s ease;
+  }
+  .dogs-photo-wrap:hover { transform: rotate(0deg) scale(1.02); }
+  .dogs-photo-wrap::after {
+    content: 'our furry family';
+    position: absolute;
+    bottom: 14px;
+    left: 0;
+    right: 0;
+    font-family: 'Dancing Script', cursive;
+    color: var(--sage-dark);
+    font-size: 1.2rem;
+    text-align: center;
+  }
+  .dogs-photo { 
+    width: 100%; 
+    height: auto; 
+    display: block;
+    border-radius: 2px;
+  }
+  .dogs-placeholder { width: 100%; height: 220px; background: linear-gradient(135deg, var(--sage-pale), var(--blush-pale)); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.5rem; font-family: 'Dancing Script', cursive; color: var(--sage-dark); border-radius: 2px; }
+  .dogs-placeholder-emoji { font-size: 3.5rem; opacity: 0.6; }
+  .dogs-placeholder-text { font-size: 1.3rem; opacity: 0.7; }
+  .dogs-caption { font-family: 'Dancing Script', cursive; color: var(--sage-dark); font-size: 1.4rem; margin-top: 1.5rem; }
+  
+  /* Decorative paw prints scattered around dogs section */
+  .dogs-paw { 
+    display: inline-block;
+    margin: 0 0.4rem;
+    font-size: 1rem;
+    opacity: 0.5;
+  }
+  
+  /* TOAST */
   .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--sage-dark); color: white; padding: 1rem 2rem; border-radius: 50px; font-family: 'Cormorant Garamond', serif; letter-spacing: 1px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); transition: transform 0.4s ease; z-index: 1000; max-width: 90%; text-align: center; }
   .toast.show { transform: translateX(-50%) translateY(0); }
   .toast.error { background: var(--blush-dark); }
   
   .calendar-options { display: grid; grid-template-columns: 1fr; gap: 0.6rem; margin-top: 1rem; }
   @media (min-width: 500px) { .calendar-options { grid-template-columns: 1fr 1fr; } }
+  
+  .bg-events { background: linear-gradient(180deg, var(--cream) 0%, var(--sage-pale) 100%); }
+  .bg-datetime { background: var(--sage-pale); text-align: center; }
+  .bg-rsvp { background: var(--blush-pale); text-align: center; }
+  .bg-messages { background: linear-gradient(180deg, var(--cream) 0%, var(--sage-pale) 100%); }
 </style>
 </head>
-<body>
+<body class="seal-closed">
 
-<section class="hero">
-  <div class="hero-leaf tl">❦</div>
-  <div class="hero-leaf br">❦</div>
-  <div class="hero-ganesha">We are getting married</div>
-  <div class="hero-together">Together with our families</div>
-  <h1 class="hero-names">Amrutha<span class="hero-amp">&amp;</span>Akshay</h1>
-  <div class="hero-hashtag">#AKSHTHA</div>
-  <p class="hero-tagline">Request the honour of your presence<br>at their wedding celebration</p>
-  <div class="hero-date">
-    <div class="hero-date-day">Sunday</div>
-    <div class="hero-date-num">12</div>
-    <div class="hero-date-month">July 2026</div>
-  </div>
-  <div class="scroll-hint">Scroll down ↓</div>
-</section>
-
-<!-- Full-page artistic A & A monogram section -->
-<section class="photo-section" id="photo-section">
-  <div class="monogram-bg">
-    <div class="monogram-leaf monogram-leaf-tl">❦</div>
-    <div class="monogram-leaf monogram-leaf-tr">❦</div>
-    <div class="monogram-leaf monogram-leaf-bl">❦</div>
-    <div class="monogram-leaf monogram-leaf-br">❦</div>
+<!-- ============================================ -->
+<!-- SEALED ENVELOPE - PAGE 1                      -->
+<!-- ============================================ -->
+<div class="seal-page" id="seal-page">
+  <div class="letter-card" id="letter-card">
     
-    <div class="monogram-content" id="monogram-content">
-      <div class="monogram-frame">
-        <div class="monogram-divider-top">
-          <span class="monogram-line"></span>
-          <span class="monogram-ornament">✦</span>
-          <span class="monogram-line"></span>
-        </div>
+    <!-- Letter body (the card itself) -->
+    <div class="letter-body">
+      <!-- Botanical decorations on corners -->
+      <div class="letter-botanical letter-bot-tl">
+        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <path d="M30 55 Q30 35 30 20"/>
+          <circle cx="30" cy="16" r="3"/>
+          <path d="M30 16 Q24 12 22 8 Q26 5 30 9 Q34 5 38 8 Q36 12 30 16"/>
+          <path d="M30 35 Q24 32 20 27"/>
+          <path d="M30 30 Q36 27 40 22"/>
+        </svg>
+      </div>
+      <div class="letter-botanical letter-bot-tr">
+        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <path d="M30 55 Q30 35 30 15"/>
+          <ellipse cx="30" cy="13" rx="4" ry="7"/>
+          <path d="M30 35 Q24 32 20 27"/>
+          <path d="M30 30 Q36 28 40 23"/>
+          <path d="M30 25 Q34 22 36 18"/>
+        </svg>
+      </div>
+      <div class="letter-botanical letter-bot-bl">
+        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <path d="M30 55 Q30 35 30 18"/>
+          <circle cx="30" cy="14" r="3"/>
+          <ellipse cx="30" cy="14" rx="6" ry="4"/>
+          <path d="M30 38 Q24 34 22 28"/>
+          <path d="M30 32 Q36 30 40 25"/>
+        </svg>
+      </div>
+      <div class="letter-botanical letter-bot-br">
+        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="30" cy="22" r="3"/>
+          <ellipse cx="30" cy="14" rx="2.5" ry="6"/>
+          <ellipse cx="38" cy="20" rx="2.5" ry="6" transform="rotate(45 38 20)"/>
+          <ellipse cx="38" cy="28" rx="2.5" ry="6" transform="rotate(90 38 28)"/>
+          <ellipse cx="22" cy="28" rx="2.5" ry="6" transform="rotate(-90 22 28)"/>
+          <ellipse cx="22" cy="20" rx="2.5" ry="6" transform="rotate(-45 22 20)"/>
+          <path d="M30 35 Q30 48 30 55"/>
+        </svg>
+      </div>
+      
+      <!-- Letter content -->
+      <div class="letter-content">
+        <button class="seal-circle" id="seal-circle" aria-label="Open invitation">
+          <div class="seal-pulse"></div>
+          <img src="aa-monogram.jpg" alt="A&amp;A" class="seal-monogram"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+          <div class="seal-monogram-fallback" style="display:none;">A&amp;A</div>
+        </button>
         
-        <div class="monogram-letters">
-          <span class="monogram-letter">A</span>
-          <span class="monogram-amp">&amp;</span>
-          <span class="monogram-letter">A</span>
-        </div>
-        
-        <div class="monogram-names">Amrutha &amp; Akshay</div>
-        <div class="monogram-hashtag">#AKSHTHA</div>
-        
-        <div class="monogram-divider-bot">
-          <span class="monogram-line"></span>
-          <span class="monogram-ornament">✦</span>
-          <span class="monogram-line"></span>
-        </div>
-        
-        <div class="monogram-date">12 · 07 · 2026</div>
+        <div class="letter-tap-text">Tap to Open</div>
       </div>
     </div>
+    
+    <!-- The flap that opens upward when card is tapped -->
+    <div class="letter-flap"></div>
+    
   </div>
+</div>
+
+<!-- ============================================ -->
+<!-- HERO - PAGE 2 (revealed after tap)            -->
+<!-- ============================================ -->
+<section class="hero">
+  <div class="hero-leaf tl">✧</div>
+  <div class="hero-leaf br">✧</div>
+  
+  <div class="hero-content-animate">
+    <div class="hero-aa-circle">
+      <img src="aa-monogram.jpg" alt="A&amp;A"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <div class="hero-aa-fallback" style="display:none;">A&amp;A</div>
+    </div>
+    <div class="hero-ganesha">We are getting married</div>
+    <div class="hero-together">Together with our families</div>
+    <h1 class="hero-names">
+      Amrutha Krishnakumar
+      <span class="hero-and">and</span>
+      Akshay Vavukkal
+    </h1>
+    <p class="hero-tagline">Request the honour of your presence<br>at our wedding celebration</p>
+    <div class="hero-date">
+      <div class="hero-date-day">Sunday</div>
+      <div class="hero-date-num">12</div>
+      <div class="hero-date-month">July 2026</div>
+    </div>
+  </div>
+  <div class="scroll-hint hero-content-animate">Scroll down ↓</div>
 </section>
 
-<section class="invitation-section">
+<!-- ARTISTIC A & A MONOGRAM -->
+<div class="monogram-section">
+  <div class="monogram-bg">
+    <div class="monogram-leaf monogram-leaf-tl">✧</div>
+    <div class="monogram-leaf monogram-leaf-tr">✧</div>
+    <div class="monogram-leaf monogram-leaf-bl">✧</div>
+    <div class="monogram-leaf monogram-leaf-br">✧</div>
+    <div class="monogram-content" id="monogram-content">
+      <div class="monogram-divider-top">
+        <span class="monogram-line"></span>
+        <span class="monogram-ornament">✧</span>
+        <span class="monogram-line"></span>
+      </div>
+      <div class="monogram-letters">
+        <span class="monogram-letter">A</span>
+        <span class="monogram-amp">&amp;</span>
+        <span class="monogram-letter">A</span>
+      </div>
+      <div class="monogram-names">Amrutha &amp; Akshay</div>
+      <div class="monogram-hashtag">#AKSHTHA</div>
+      <div class="monogram-divider-bot">
+        <span class="monogram-line"></span>
+        <span class="monogram-ornament">✧</span>
+        <span class="monogram-line"></span>
+      </div>
+      <div class="monogram-date">12 · 07 · 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- INVITATION -->
+<section>
   <div class="section-subtitle">An Invitation</div>
   <h2 class="section-title">With Joyful Hearts</h2>
-  <div class="divider"><span class="divider-icon">❦</span></div>
-  
-  <!-- Hosts / Bride's Parents -->
+  <div class="divider"><span class="divider-icon">✧</span></div>
   <div class="hosts-card">
     <div class="hosts-names">Mr. Chenoth Krishnakumar &amp; Mrs. Reshmitha M</div>
     <div class="hosts-address">
@@ -461,112 +630,111 @@
       <span class="hosts-phone">Ph: 9645722152 · 9846703999</span>
     </div>
   </div>
-  
   <div class="invite-line">
     <p>We cordially invite your gracious presence with family<br>
     on the auspicious occasion of the marriage of our daughter</p>
   </div>
-  
   <div class="couple-card">
-    <div class="couple-card-relation" style="margin-bottom: 0.8rem; margin-top: 0;">
+    <div class="couple-card-relation" style="margin-bottom: 0.8rem;">
       Granddaughter of<br>
       late Ramakrishnan &amp; Mrs. Chandramathi<br>
       and late Padmanabhan &amp; Mrs. Santha Kumari
     </div>
     <div class="couple-card-name">Amrutha Krishnakumar</div>
   </div>
-  
   <div class="with-text">with</div>
-  
   <div class="couple-card">
     <div class="couple-card-name" style="margin-bottom: 0.5rem;">Akshay Vavukkal</div>
-    <div class="couple-card-relation">
-      Son of Mr. Sivaraj &amp; Mrs. Sanitha
+    <div class="couple-card-relation">Son of Mr. Sivaraj &amp; Mrs. Sanitha</div>
+  </div>
+</section>
+
+<!-- WEDDING CEREMONY -->
+<section class="full-bleed bg-events">
+  <div class="inner">
+    <div class="section-subtitle">Save the Date</div>
+    <h2 class="section-title">Wedding Ceremony</h2>
+    <div class="divider"><span class="divider-icon">✧</span></div>
+    <div class="event-card">
+      <div class="event-title">Wedding Ceremony</div>
+      <div class="event-meta">
+        <div class="event-meta-item">📅 Sunday, 12 July 2026</div>
+        <div class="event-meta-item">📍 Athafy Auditorium, Vadakara</div>
+      </div>
+      <div style="text-align: center;">
+        <div class="event-muhurtham">🕐 Muhurtham: 11:45 AM – 12:30 PM</div>
+      </div>
+      <div class="event-info-line">Marriage team will leave by 10:00 AM</div>
+      <div class="event-note">Please note: There is no function on the previous day</div>
     </div>
   </div>
 </section>
 
-<section class="events-section">
-  <div class="section-subtitle">Save the Date</div>
-  <h2 class="section-title">Wedding Ceremony</h2>
-  <div class="divider"><span class="divider-icon">❦</span></div>
-  
-  <div class="event-card">
-    <div class="event-title">Wedding Ceremony</div>
-    <div class="event-meta">
-      <div class="event-meta-item">📅 Sunday, 12 July 2026</div>
-      <div class="event-meta-item">📍 Athafy Auditorium, Vadakara</div>
+<!-- COUNTDOWN -->
+<section class="full-bleed bg-datetime">
+  <div class="inner">
+    <div class="section-subtitle">Counting Down to the Big Day</div>
+    <h2 class="section-title">Save the Date</h2>
+    <div class="divider"><span class="divider-icon">✧</span></div>
+    <div class="countdown" id="countdown">
+      <div class="countdown-box"><div class="countdown-num" id="cd-days">00</div><div class="countdown-label">Days</div></div>
+      <div class="countdown-box"><div class="countdown-num" id="cd-hours">00</div><div class="countdown-label">Hours</div></div>
+      <div class="countdown-box"><div class="countdown-num" id="cd-mins">00</div><div class="countdown-label">Minutes</div></div>
+      <div class="countdown-box"><div class="countdown-num" id="cd-secs">00</div><div class="countdown-label">Seconds</div></div>
     </div>
-    <div style="text-align: center;">
-      <div class="event-muhurtham">🕐 Muhurtham: 11:45 AM – 12:30 PM</div>
+    <p style="margin-top: 1.5rem; font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text-light);">Add this special day to your calendar</p>
+    <div class="calendar-options" style="max-width: 500px; margin: 1.5rem auto 0;">
+      <button class="btn" onclick="addToGoogleCalendar()">📅 Google Calendar</button>
+      <button class="btn btn-outline" onclick="downloadICS()">📥 Apple / Outlook (.ics)</button>
     </div>
-    <div class="event-info-line">
-      Marriage team will leave by 10:00 AM
-    </div>
-    <div class="event-note">
-      Please note: There is no function on the previous day
+    <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-light); font-style: italic;">A reminder will alert you on July 11 at 1:00 PM</p>
+  </div>
+</section>
+
+<!-- RSVP -->
+<section class="full-bleed bg-rsvp">
+  <div class="inner">
+    <div class="section-subtitle">Will You Join Us?</div>
+    <h2 class="section-title">RSVP</h2>
+    <div class="divider"><span class="divider-icon">✧</span></div>
+    <p style="text-align: center; font-style: italic; color: var(--text-light); max-width: 500px; margin: 0 auto;">Your presence would mean the world to us. Please let us know if you'll be joining the celebration.</p>
+    <div class="rsvp-form">
+      <div class="form-group">
+        <label class="form-label">Your Name</label>
+        <input type="text" id="rsvp-name" class="form-input" placeholder="Enter your full name" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Number of Guests</label>
+        <select id="rsvp-guests" class="form-select">
+          <option value="1">Just me (1)</option>
+          <option value="2">2 guests</option>
+          <option value="3">3 guests</option>
+          <option value="4">4 guests</option>
+          <option value="5">5 guests</option>
+          <option value="6">6+ guests</option>
+        </select>
+      </div>
+      <label class="form-label">Will you attend?</label>
+      <div class="rsvp-options">
+        <label class="rsvp-radio">
+          <input type="radio" name="attending" value="yes" checked>
+          <div class="rsvp-radio-label">Yes, with joy</div>
+        </label>
+        <label class="rsvp-radio">
+          <input type="radio" name="attending" value="no">
+          <div class="rsvp-radio-label">Regretfully no</div>
+        </label>
+      </div>
+      <button class="btn" id="rsvp-btn" onclick="submitRSVP()" style="width: 100%; margin-top: 0.5rem;">Send RSVP</button>
     </div>
   </div>
 </section>
 
-<section class="datetime-section">
-  <div class="section-subtitle">Counting Down to the Big Day</div>
-  <h2 class="section-title">Save the Date</h2>
-  <div class="divider"><span class="divider-icon">❦</span></div>
-  <div class="countdown" id="countdown">
-    <div class="countdown-box"><div class="countdown-num" id="cd-days">00</div><div class="countdown-label">Days</div></div>
-    <div class="countdown-box"><div class="countdown-num" id="cd-hours">00</div><div class="countdown-label">Hours</div></div>
-    <div class="countdown-box"><div class="countdown-num" id="cd-mins">00</div><div class="countdown-label">Minutes</div></div>
-    <div class="countdown-box"><div class="countdown-num" id="cd-secs">00</div><div class="countdown-label">Seconds</div></div>
-  </div>
-  <p style="margin-top: 1.5rem; font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text-light);">Add this special day to your calendar</p>
-  <div class="calendar-options" style="max-width: 500px; margin: 1.5rem auto 0;">
-    <button class="btn" onclick="addToGoogleCalendar()">📅 Google Calendar</button>
-    <button class="btn btn-outline" onclick="downloadICS()">📥 Apple / Outlook (.ics)</button>
-  </div>
-  <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-light); font-style: italic;">A reminder will be set for the day before</p>
-</section>
-
-<section class="rsvp-section">
-  <div class="section-subtitle">Will You Join Us?</div>
-  <h2 class="section-title">RSVP</h2>
-  <div class="divider"><span class="divider-icon">❦</span></div>
-  <p style="text-align: center; font-style: italic; color: var(--text-light); max-width: 500px; margin: 0 auto;">Your presence would mean the world to us. Please let us know if you'll be joining the celebration.</p>
-  <div class="rsvp-form">
-    <div class="form-group">
-      <label class="form-label">Your Name</label>
-      <input type="text" id="rsvp-name" class="form-input" placeholder="Enter your full name" />
-    </div>
-    <div class="form-group">
-      <label class="form-label">Number of Guests</label>
-      <select id="rsvp-guests" class="form-select">
-        <option value="1">Just me (1)</option>
-        <option value="2">2 guests</option>
-        <option value="3">3 guests</option>
-        <option value="4">4 guests</option>
-        <option value="5">5 guests</option>
-        <option value="6">6+ guests</option>
-      </select>
-    </div>
-    <label class="form-label">Will you attend?</label>
-    <div class="rsvp-options">
-      <label class="rsvp-radio">
-        <input type="radio" name="attending" value="yes" checked>
-        <div class="rsvp-radio-label">Yes, with joy</div>
-      </label>
-      <label class="rsvp-radio">
-        <input type="radio" name="attending" value="no">
-        <div class="rsvp-radio-label">Regretfully no</div>
-      </label>
-    </div>
-    <button class="btn" id="rsvp-btn" onclick="submitRSVP()" style="width: 100%; margin-top: 0.5rem;">Send RSVP</button>
-  </div>
-</section>
-
+<!-- VENUE -->
 <section>
   <div class="section-subtitle">Find Us Here</div>
   <h2 class="section-title">The Venue</h2>
-  <div class="divider"><span class="divider-icon">❦</span></div>
+  <div class="divider"><span class="divider-icon">✧</span></div>
   <div class="venue-info">
     <div class="venue-name">Athafy Auditorium</div>
     <div class="venue-address">
@@ -585,45 +753,65 @@
   </div>
 </section>
 
-<section class="messages-section">
-  <div class="section-subtitle">Share Your Wishes</div>
-  <h2 class="section-title">Messages for the Couple</h2>
-  <div class="divider"><span class="divider-icon">❦</span></div>
-  <div class="message-form">
-    <div class="form-group">
-      <label class="form-label">Your Name</label>
-      <input type="text" id="msg-name" class="form-input" placeholder="Your name" />
+<!-- MESSAGES -->
+<section class="full-bleed bg-messages">
+  <div class="inner">
+    <div class="section-subtitle">Share Your Wishes</div>
+    <h2 class="section-title">Messages for the Couple</h2>
+    <div class="divider"><span class="divider-icon">✧</span></div>
+    <div class="message-form">
+      <div class="form-group">
+        <label class="form-label">Your Name</label>
+        <input type="text" id="msg-name" class="form-input" placeholder="Your name" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your Message</label>
+        <textarea id="msg-text" class="form-textarea" placeholder="Share your blessings, wishes, or a memory..."></textarea>
+      </div>
+      <button class="btn btn-blush" id="msg-btn" onclick="submitMessage()" style="width: 100%;">Send Wishes 💌</button>
+      <p style="text-align: center; font-size: 0.8rem; color: var(--text-light); margin-top: 0.8rem; font-style: italic;">Messages will appear after review</p>
     </div>
-    <div class="form-group">
-      <label class="form-label">Your Message</label>
-      <textarea id="msg-text" class="form-textarea" placeholder="Share your blessings, wishes, or a memory..."></textarea>
+    <h3 style="font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: var(--sage-dark); text-align: center; margin: 2rem 0 1rem;">Wishes from Loved Ones</h3>
+    <div class="messages-list" id="messages-list">
+      <div class="no-messages">Loading messages...</div>
     </div>
-    <button class="btn btn-blush" id="msg-btn" onclick="submitMessage()" style="width: 100%;">Send Wishes 💌</button>
-    <p style="text-align: center; font-size: 0.8rem; color: var(--text-light); margin-top: 0.8rem; font-style: italic;">Messages will appear after review</p>
-  </div>
-  <h3 style="font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: var(--sage-dark); text-align: center; margin: 2rem 0 1rem;">Wishes from Loved Ones</h3>
-  <div class="messages-list" id="messages-list">
-    <div class="no-messages">Loading messages...</div>
   </div>
 </section>
 
-<section class="footer">
+<!-- FOOTER -->
+<div class="footer">
   <div class="footer-title">Thank You</div>
   <div class="footer-hashtag">#AKSHTHA</div>
-  <p class="footer-text">"Two hearts, one journey."<br><br>With love,<br>Amrutha &amp; Akshay</p>
-</section>
+  <p class="footer-text">"Two hearts, one journey."</p>
+  <div class="footer-signoff">With love,<br>The Krishnakumar Family</div>
+</div>
+
+<!-- DOGS SECTION -->
+<div class="dogs-section">
+  <div class="dogs-inner">
+    <p class="dogs-intro">
+      ...and our four-legged family members<br>
+      can't wait to celebrate with you too <span class="dogs-paw">🐾</span>
+    </p>
+    <div class="dogs-photo-wrap">
+      <img src="dogs.jpg" alt="Our furry family" class="dogs-photo"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="dogs-placeholder" style="display:none;">
+        <div class="dogs-placeholder-emoji">🐾</div>
+        <div class="dogs-placeholder-text">Our furry family</div>
+      </div>
+    </div>
+    <div class="dogs-caption">
+      <span class="dogs-paw">🐾</span> With wagging tails &amp; happy hearts <span class="dogs-paw">🐾</span>
+    </div>
+  </div>
+</div>
 
 <div class="toast" id="toast"></div>
 
-<!-- ============================================ -->
-<!-- FIREBASE INTEGRATION                          -->
-<!-- ============================================ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { 
-  getFirestore, collection, addDoc, query, where, orderBy, 
-  onSnapshot, serverTimestamp 
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDh0cJylt--p7xMLHUH31GCaJYfBFbFDHM",
@@ -636,16 +824,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 window.db = db;
 window.fb = { collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp };
 
-const messagesQuery = query(
-  collection(db, "messages"),
-  where("status", "==", "approved"),
-  orderBy("timestamp", "desc")
-);
-
+const messagesQuery = query(collection(db, "messages"), where("status", "==", "approved"), orderBy("timestamp", "desc"));
 onSnapshot(messagesQuery, (snapshot) => {
   const list = document.getElementById('messages-list');
   if (snapshot.empty) {
@@ -655,18 +837,12 @@ onSnapshot(messagesQuery, (snapshot) => {
   const html = [];
   snapshot.forEach(doc => {
     const m = doc.data();
-    html.push(`
-      <div class="message-card">
-        <div class="message-text">${escapeHtml(m.text)}</div>
-        <div class="message-author">— ${escapeHtml(m.name)}</div>
-      </div>
-    `);
+    html.push(`<div class="message-card"><div class="message-text">${escapeHtml(m.text)}</div><div class="message-author">— ${escapeHtml(m.name)}</div></div>`);
   });
   list.innerHTML = html.join('');
 }, (err) => {
   console.error("Messages listener error:", err);
-  document.getElementById('messages-list').innerHTML = 
-    '<div class="no-messages">Could not load messages. Please refresh.</div>';
+  document.getElementById('messages-list').innerHTML = '<div class="no-messages">Could not load messages. Please refresh.</div>';
 });
 
 function escapeHtml(s) {
@@ -676,44 +852,61 @@ window.escapeHtml = escapeHtml;
 </script>
 
 <script>
-// ============================================
-// MONOGRAM SCROLL FADE-IN
-// ============================================
+// SEAL OPEN
+(function() {
+  const seal = document.getElementById('seal-circle');
+  const sealPage = document.getElementById('seal-page');
+  const letterCard = document.getElementById('letter-card');
+  let opened = false;
+  
+  function openSeal() {
+    if (opened) return;
+    opened = true;
+    document.body.classList.remove('seal-closed');
+    document.body.classList.add('seal-opened');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    setTimeout(() => {
+      if (sealPage && sealPage.parentNode) sealPage.parentNode.removeChild(sealPage);
+    }, 2200);
+  }
+  
+  // Tap anywhere on the letter card opens it
+  if (letterCard) letterCard.addEventListener('click', openSeal);
+  if (sealPage) sealPage.addEventListener('click', openSeal);
+  
+  // Keyboard accessibility on the seal
+  if (seal) seal.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openSeal(); }
+  });
+})();
+
+// MONOGRAM FADE
 (function() {
   const monogram = document.getElementById('monogram-content');
   if (!monogram) return;
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        monogram.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
+      if (entry.isIntersecting) { monogram.classList.add('visible'); observer.unobserve(entry.target); }
     });
   }, { threshold: 0.2 });
   observer.observe(monogram);
 })();
 
-// ============================================
-// CONFIG
-// ============================================
 const WEDDING_CONFIG = {
   brideName: 'Amrutha Krishnakumar',
   groomName: 'Akshay Vavukkal',
   weddingDate: '2026-07-12T11:45:00',
   weddingEndDate: '2026-07-12T12:30:00',
+  reminderDate: '2026-07-11T13:00:00',
   venue: 'Athafy Auditorium, Vadakara',
   venueAddress: 'Athafy Auditorium, Nadapuram Vadakara Road, Vadakara, Kerala 673106, India'
 };
 
-// ============================================
-// COUNTDOWN
-// ============================================
 function updateCountdown() {
   const target = new Date(WEDDING_CONFIG.weddingDate).getTime();
   const diff = target - Date.now();
   if (diff < 0) {
-    document.getElementById('countdown').innerHTML = 
-      '<div style="grid-column: 1/-1; font-family: \'Dancing Script\', cursive; font-size: 2rem; color: var(--sage-dark);">We are married! 💕</div>';
+    document.getElementById('countdown').innerHTML = '<div style="grid-column: 1/-1; font-family: \'Dancing Script\', cursive; font-size: 2rem; color: var(--sage-dark);">We are married! 💕</div>';
     return;
   }
   const d = Math.floor(diff / 86400000);
@@ -728,36 +921,40 @@ function updateCountdown() {
 setInterval(updateCountdown, 1000);
 updateCountdown();
 
-// ============================================
-// CALENDAR
-// ============================================
 function fmt(d) { return new Date(d).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'; }
+function getReminderOffsetMinutes() {
+  const eventTime = new Date(WEDDING_CONFIG.weddingDate).getTime();
+  const reminderTime = new Date(WEDDING_CONFIG.reminderDate).getTime();
+  return Math.round((eventTime - reminderTime) / 60000);
+}
 
 function addToGoogleCalendar() {
   const start = fmt(WEDDING_CONFIG.weddingDate);
   const end = fmt(WEDDING_CONFIG.weddingEndDate);
-  const title = encodeURIComponent(`${WEDDING_CONFIG.brideName} & ${WEDDING_CONFIG.groomName} Wedding · #AKSHTHA`);
-  const details = encodeURIComponent(`Wedding ceremony of ${WEDDING_CONFIG.brideName} & ${WEDDING_CONFIG.groomName}. Muhurtham: 11:45 AM - 12:30 PM. #AKSHTHA`);
+  const title = encodeURIComponent(`${WEDDING_CONFIG.brideName} & ${WEDDING_CONFIG.groomName} Wedding`);
+  const details = encodeURIComponent(`Wedding ceremony of ${WEDDING_CONFIG.brideName} & ${WEDDING_CONFIG.groomName}. Muhurtham: 11:45 AM - 12:30 PM. Marriage team leaves by 10 AM.`);
   const location = encodeURIComponent(WEDDING_CONFIG.venueAddress);
   const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}&location=${location}&trp=true`;
   window.open(url, '_blank');
-  showToast('Set "1 day before" reminder in Google Calendar!');
+  showToast('Reminder will alert you on July 11 at 1:00 PM!');
 }
 
 function downloadICS() {
   const start = fmt(WEDDING_CONFIG.weddingDate);
   const end = fmt(WEDDING_CONFIG.weddingEndDate);
   const now = fmt(new Date().toISOString());
+  const reminderMinutes = getReminderOffsetMinutes();
   const ics = [
     'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Wedding//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH',
     'BEGIN:VEVENT',
     `UID:${Date.now()}@wedding.invite`,
     `DTSTAMP:${now}`, `DTSTART:${start}`, `DTEND:${end}`,
     `SUMMARY:${WEDDING_CONFIG.brideName} & ${WEDDING_CONFIG.groomName} Wedding`,
-    `DESCRIPTION:Wedding ceremony of ${WEDDING_CONFIG.brideName} & ${WEDDING_CONFIG.groomName}. Muhurtham 11:45 AM - 12:30 PM. #AKSHTHA`,
+    `DESCRIPTION:Wedding ceremony. Muhurtham 11:45 AM - 12:30 PM. Marriage team leaves by 10 AM.`,
     `LOCATION:${WEDDING_CONFIG.venueAddress}`,
-    'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Wedding tomorrow! 💕 #AKSHTHA','TRIGGER:-P1D','END:VALARM',
-    'END:VEVENT','END:VCALENDAR'
+    'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Wedding tomorrow! 💕',
+    `TRIGGER:-PT${reminderMinutes}M`,
+    'END:VALARM','END:VEVENT','END:VCALENDAR'
   ].join('\r\n');
   const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
   const url = URL.createObjectURL(blob);
@@ -766,14 +963,11 @@ function downloadICS() {
   a.download = `Amrutha-Akshay-Wedding.ics`;
   a.click();
   URL.revokeObjectURL(url);
-  showToast('Calendar file downloaded!');
+  showToast('Calendar file downloaded! Reminder set for July 11, 1:00 PM');
 }
 window.addToGoogleCalendar = addToGoogleCalendar;
 window.downloadICS = downloadICS;
 
-// ============================================
-// TOAST
-// ============================================
 function showToast(message, isError = false) {
   const toast = document.getElementById('toast');
   toast.textContent = message;
@@ -782,71 +976,38 @@ function showToast(message, isError = false) {
 }
 window.showToast = showToast;
 
-// ============================================
-// RSVP
-// ============================================
 async function submitRSVP() {
   const name = document.getElementById('rsvp-name').value.trim();
   const guests = parseInt(document.getElementById('rsvp-guests').value);
   const attending = document.querySelector('input[name="attending"]:checked').value;
   const btn = document.getElementById('rsvp-btn');
-  
   if (!name) { showToast('Please enter your name', true); return; }
   if (!window.db) { showToast('Connecting... please try again', true); return; }
-  
-  btn.disabled = true;
-  btn.textContent = 'Sending...';
-  
+  btn.disabled = true; btn.textContent = 'Sending...';
   try {
-    await window.fb.addDoc(window.fb.collection(window.db, "rsvps"), {
-      name, guests, attending,
-      timestamp: window.fb.serverTimestamp()
-    });
+    await window.fb.addDoc(window.fb.collection(window.db, "rsvps"), { name, guests, attending, timestamp: window.fb.serverTimestamp() });
     document.getElementById('rsvp-name').value = '';
-    showToast(attending === 'yes' 
-      ? '🎉 Thank you! We can\'t wait to celebrate with you!'
-      : '💐 Thank you for letting us know. You\'ll be missed!');
-  } catch (e) {
-    console.error(e);
-    showToast('Could not send RSVP. Please try again.', true);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Send RSVP';
-  }
+    showToast(attending === 'yes' ? '🎉 Thank you! We can\'t wait to celebrate with you!' : '💐 Thank you for letting us know. You\'ll be missed!');
+  } catch (e) { console.error(e); showToast('Could not send RSVP. Please try again.', true); }
+  finally { btn.disabled = false; btn.textContent = 'Send RSVP'; }
 }
 window.submitRSVP = submitRSVP;
 
-// ============================================
-// MESSAGES
-// ============================================
 async function submitMessage() {
   const name = document.getElementById('msg-name').value.trim();
   const text = document.getElementById('msg-text').value.trim();
   const btn = document.getElementById('msg-btn');
-  
   if (!name || !text) { showToast('Please fill in both fields', true); return; }
   if (text.length > 500) { showToast('Message too long (max 500 chars)', true); return; }
   if (!window.db) { showToast('Connecting... please try again', true); return; }
-  
-  btn.disabled = true;
-  btn.textContent = 'Sending...';
-  
+  btn.disabled = true; btn.textContent = 'Sending...';
   try {
-    await window.fb.addDoc(window.fb.collection(window.db, "messages"), {
-      name, text,
-      status: 'pending',
-      timestamp: window.fb.serverTimestamp()
-    });
+    await window.fb.addDoc(window.fb.collection(window.db, "messages"), { name, text, status: 'pending', timestamp: window.fb.serverTimestamp() });
     document.getElementById('msg-name').value = '';
     document.getElementById('msg-text').value = '';
     showToast('💌 Thank you! Your message will appear after review.');
-  } catch (e) {
-    console.error(e);
-    showToast('Could not send message. Please try again.', true);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Send Wishes 💌';
-  }
+  } catch (e) { console.error(e); showToast('Could not send message. Please try again.', true); }
+  finally { btn.disabled = false; btn.textContent = 'Send Wishes 💌'; }
 }
 window.submitMessage = submitMessage;
 </script>
