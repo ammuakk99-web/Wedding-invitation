@@ -1126,7 +1126,7 @@ window.escapeHtml = escapeHtml;
 
   document.body.classList.add('seal-opened');
 
-}, 1200);
+}, 350);
     window.scrollTo({ top: 0, behavior: 'instant' });
     setTimeout(() => {
       if (sealPage && sealPage.parentNode) sealPage.parentNode.removeChild(sealPage);
@@ -1368,6 +1368,8 @@ window.submitMessage = submitMessage;
 
   let scratching = false;
 
+let scratchedOnce = false;
+
   function scratch(x,y){
 
     ctx.globalCompositeOperation = 'destination-out';
@@ -1377,6 +1379,14 @@ window.submitMessage = submitMessage;
     ctx.arc(x,y,22,0,Math.PI*2);
 
     ctx.fill();
+
+if(!scratchedOnce){
+
+  scratchedOnce = true;
+
+  wrapper.classList.add('scratching');
+
+}
   }
 
   function getXY(e){
@@ -1410,8 +1420,6 @@ window.submitMessage = submitMessage;
 
   scratching = false;
 
-  wrapper.classList.remove('scratching');
-
 });
 
   canvas.addEventListener('mousemove', (e)=>{
@@ -1435,8 +1443,6 @@ window.submitMessage = submitMessage;
   canvas.addEventListener('touchend', ()=> {
 
   scratching = false;
-
-  wrapper.classList.remove('scratching');
 
 });
 
