@@ -613,7 +613,26 @@ letter-spacing: 4px;
   .event-meta-item { display: flex; align-items: center; gap: 0.5rem; font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; }
   .event-muhurtham { background: var(--sage-pale); padding: 0.8rem 1.5rem; border-radius: 50px; margin: 1rem auto 0; display: inline-block; font-family: 'Cormorant Garamond', serif; color: var(--sage-dark); font-weight: 600; letter-spacing: 1px; }
   .event-info-line { text-align: center; margin-top: 1rem; padding: 0.8rem 1rem; background: var(--cream); border-radius: 6px; font-family: 'Cormorant Garamond', serif; color: var(--text); font-size: 1rem; letter-spacing: 0.5px; border: 1px dashed var(--sage-light); }
-  .event-note { background: var(--blush-pale); border-left: 3px solid var(--blush-dark); padding: 1rem 1.2rem; margin-top: 1rem; border-radius: 6px; font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text); font-size: 0.95rem; text-align: center; }
+  .event-note{
+  background: #5d6d4e;
+
+  color: #f7f3ea;
+
+  padding: 14px 18px;
+
+  border-radius: 14px;
+
+  font-weight: 600;
+
+  text-align: center;
+
+  margin-top: 1rem;
+
+  line-height: 1.6;
+
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.08);
+}
   
   /* COUNTDOWN */
   .countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; max-width: 500px; margin: 2rem auto; }
@@ -908,16 +927,32 @@ letter-spacing: 4px;
   <div class="couple-card">
     <div class="couple-card-relation" style="margin-bottom: 0.8rem;">
       Granddaughter of<br>
-      late Ramakrishnan &amp; Mrs. Chandramathi<br>
-      and late Padmanabhan &amp; Mrs. Santha Kumari
+      Late Chenoth Ramakrishnan &amp; Mrs. M.K Chandramathi<br>
+      and late M. Padmanabhan &amp; Mrs. Santha Kumari
     </div>
     <div class="couple-card-name">Amrutha Krishnakumar</div>
   </div>
   <div class="with-text">with</div>
-  <div class="couple-card">
-    <div class="couple-card-name" style="margin-bottom: 0.5rem;">Akshay Vavukkal</div>
-    <div class="couple-card-relation">Son of Mr. Sivaraj &amp; Mrs. Sanitha</div>
+ <div class="couple-card">
+
+  <div class="couple-card-name" style="margin-bottom: 1.2rem;">
+    Akshay Vavukkal
   </div>
+
+  <div class="hosts-card" style="margin-top: 0;">
+
+    <div class="hosts-names">
+      Mr. Sivaraj V &amp; Mrs. Sanitha P T
+    </div>
+
+    <div class="hosts-address">
+      “Aksharam House”, Karuvambram West P.O,<br>
+      Manjeri – 676123
+    </div>
+
+  </div>
+
+</div>
 </section>
 
 <!-- WEDDING CEREMONY -->
@@ -935,8 +970,10 @@ letter-spacing: 4px;
       <div style="text-align: center;">
         <div class="event-muhurtham">🕐 Muhurtham: 11:45 AM – 12:30 PM</div>
       </div>
-      <div class="event-info-line">Marriage team will leave by 10:00 AM</div>
-      <div class="event-note">Please note: There is no function on the previous day</div>
+      
+      <div class="event-note">
+	   <strong>Please note: There is no function on the previous day </strong>
+	   </div>
     </div>
   </div>
 </section>
@@ -1009,7 +1046,7 @@ letter-spacing: 4px;
   <div class="venue-info">
     <div class="venue-name">Athafy Auditorium</div>
     <div class="venue-address">
-      Nadapuram Vadakara Road<br>
+      Opposite Juma Masjid Vallikkad,<br>
       Vadakara, Kerala 673106<br>
       India
     </div>
@@ -1050,11 +1087,9 @@ letter-spacing: 4px;
 </section>
 
 <!-- FOOTER -->
-<div class="footer">
-  <div class="footer-title">Thank You</div>
-  <div class="footer-hashtag">#AKSHTHA</div>
+<div class="footer"> 
   <p class="footer-text">"Two hearts, one journey."</p>
-  <div class="footer-signoff">With love,<br>The Krishnakumar Family</div>
+  <div class="footer-signoff">With best compliments from..<br>Vaishnav Krishnakumar & ' Ramakrishna'</div>
 </div>
 
 <!-- DOGS SECTION -->
@@ -1174,7 +1209,7 @@ const WEDDING_CONFIG = {
   weddingEndDate: '2026-07-12T12:30:00',
   reminderDate: '2026-07-11T13:00:00',
   venue: 'Athafy Auditorium, Vadakara',
-  venueAddress: 'Athafy Auditorium, Nadapuram Vadakara Road, Vadakara, Kerala 673106, India'
+  venueAddress: 'Athafy Auditorium, Opposite Juma Masjid Vallikkad, Vadakara, Kozhikode-673542, Kerala, India'
 };
 
 function updateCountdown() {
@@ -1241,14 +1276,33 @@ function getReminderOffsetMinutes() {
 }
 
 function addToGoogleCalendar() {
-  const start = fmt(WEDDING_CONFIG.weddingDate);
-  const end = fmt(WEDDING_CONFIG.weddingEndDate);
-  const title = encodeURIComponent(`${WEDDING_CONFIG.brideName} & ${WEDDING_CONFIG.groomName} Wedding`);
-  const details = encodeURIComponent(`Wedding ceremony of ${WEDDING_CONFIG.brideName} & ${WEDDING_CONFIG.groomName}. Muhurtham: 11:45 AM - 12:30 PM. Marriage team leaves by 10 AM.`);
-  const location = encodeURIComponent(WEDDING_CONFIG.venueAddress);
-  const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}&location=${location}&trp=true`;
+
+  const reminderDate = new Date('2026-07-11T13:00:00');
+
+  const eventEnd = new Date('2026-07-12T15:00:00');
+
+  const start = fmt(reminderDate);
+
+  const end = fmt(eventEnd);
+
+  const title = encodeURIComponent(
+    `${WEDDING_CONFIG.brideName} & ${WEDDING_CONFIG.groomName} Wedding`
+  );
+
+  const details = encodeURIComponent(
+    `Wedding ceremony of ${WEDDING_CONFIG.brideName} & ${WEDDING_CONFIG.groomName}. Muhurtham: 11:45 AM - 12:30 PM.`
+  );
+
+  const location = encodeURIComponent(
+    WEDDING_CONFIG.venueAddress
+  );
+
+  const url =
+    `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}&location=${location}&trp=true`;
+
   window.open(url, '_blank');
-  showToast('Reminder will alert you on July 11 at 1:00 PM!');
+
+  showToast('Google Calendar opened with July 11 reminder!');
 }
 
 function downloadICS() {
